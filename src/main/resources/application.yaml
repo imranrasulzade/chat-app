@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: chat-app
+
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/chat_app
+    password: 12345678
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    show-sql: false
+
+
+token:
+  signing:
+    key: 413F4428472B4B62506553688566D5970337336763979244226452948404D6351
