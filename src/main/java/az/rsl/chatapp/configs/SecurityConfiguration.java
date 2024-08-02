@@ -62,6 +62,7 @@ public class SecurityConfiguration {
 //                                .requestMatchers(WHITE_LIST).permitAll()
                                 .requestMatchers("/auth/signup").permitAll()
                                 .requestMatchers("/ws").permitAll()
+                                .requestMatchers("/ws/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/refresh-token").hasAnyAuthority("ADMIN", "USER")
                                 .requestMatchers(HttpMethod.GET, "/**").hasAnyAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/**").hasAuthority("ADMIN")
