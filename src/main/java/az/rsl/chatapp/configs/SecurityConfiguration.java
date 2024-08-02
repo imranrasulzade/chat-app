@@ -42,7 +42,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults())
+//                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
                         request
@@ -68,7 +68,8 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.POST, "/**").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/**").hasAnyAuthority("ADMIN")
                                 .requestMatchers("test/test").hasAnyAuthority("ADMIN")
-                                .anyRequest().authenticated())
+                                .anyRequest().authenticated()
+                )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
 
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
