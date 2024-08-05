@@ -1,18 +1,15 @@
 package az.rsl.chatapp.controller;
 
+import az.rsl.chatapp.dto.ChatUsersDto;
 import az.rsl.chatapp.dto.MessageDto;
 import az.rsl.chatapp.payloads.MessagePayload;
-import az.rsl.chatapp.repositories.MessageRepository;
 import az.rsl.chatapp.services.MessageService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,7 +29,12 @@ public class MessageController {
     }
 
     @GetMapping("/{receiver}")
-    public List<MessageDto> get(@PathVariable String receiver) {
+    public List<MessageDto> get(@PathVariable Long receiver) {
         return messageService.getByReceiver(receiver);
+    }
+
+    @PostMapping
+    public List<MessageDto> get(@RequestBody @Valid ChatUsersDto dto) {
+        return messageService.getBySenderAndReceiverChat(dto);
     }
 }
