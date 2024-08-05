@@ -1,5 +1,6 @@
 package az.rsl.chatapp.services.impl;
 
+import az.rsl.chatapp.dto.RoleDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import az.rsl.chatapp.dto.UserDto;
 import az.rsl.chatapp.entities.Token;
@@ -16,6 +17,7 @@ import az.rsl.chatapp.services.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -39,6 +41,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final ModelMapper modelMapper;
 
     @Override
     public JwtAuthenticationResponse signUp(SignUpPayload payload) {
@@ -57,7 +60,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 
     @Override
-    public JwtAuthenticationResponse signIp(SignInPayload payload) {
+    public JwtAuthenticationResponse signIn(SignInPayload payload) {
         Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(payload.getUserName(), payload.getPassword()));
         log.info("new login with name: {}, role: {}", authenticate.getName(), authenticate.getAuthorities());
@@ -66,11 +69,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var jwt = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         savedUserToken(user, jwt);
+        RoleDto roleDto = modelMapper.map(user.getRole(), RoleDto.class);
         return JwtAuthenticationResponse.builder()
                 .user(UserDto.builder()
                         .id(user.getId())
                         .userName(user.getUsername())
-                        .role(user.getRole().getName())
+                        .role(roleDto)
                         .createdAt(user.getCreatedAt())
                         .updatedAt(user.getUpdatedAt())
                         .build())
