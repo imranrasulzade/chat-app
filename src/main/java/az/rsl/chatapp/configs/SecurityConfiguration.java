@@ -23,6 +23,7 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
@@ -60,14 +61,18 @@ public class SecurityConfiguration {
                                         "/webjars/**",
                                         "/swagger-ui.html").permitAll()
 //                                .requestMatchers(WHITE_LIST).permitAll()
-                                .requestMatchers("/auth/signup").permitAll()
+//                                .requestMatchers("/auth/signup").permitAll()
                                 .requestMatchers("/ws").permitAll()
                                 .requestMatchers("/ws/**").permitAll()
+                                .requestMatchers("/api/messages").hasAnyAuthority("USER")
+                                .requestMatchers("test/test").hasAnyAuthority("ADMIN")
+                                .requestMatchers("test/test-user").hasAnyAuthority("USER")
+                                .requestMatchers("users").hasAnyAuthority("ADMIN", "USER")
+                                .requestMatchers("users/**").hasAnyAuthority("ADMIN", "USER")
                                 .requestMatchers(HttpMethod.POST, "/auth/refresh-token").hasAnyAuthority("ADMIN", "USER")
                                 .requestMatchers(HttpMethod.GET, "/**").hasAnyAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/**").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/**").hasAnyAuthority("ADMIN")
-                                .requestMatchers("test/test").hasAnyAuthority("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
@@ -102,15 +107,28 @@ public class SecurityConfiguration {
         return config.getAuthenticationManager();
     }
 
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(List.of("*"));
+//        configuration.setAllowedMethods(List.of("*"));
+//        configuration.setAllowedHeaders(List.of("*"));
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
+
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*"));
-        configuration.setAllowedMethods(List.of("*"));
-        configuration.setAllowedHeaders(List.of("*"));
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 
     static String[] WHITE_LIST = {
