@@ -15,4 +15,9 @@ public class TestController {
         return "TEST ok!";
     }
 
+    @GetMapping("/test-user")
+    public String test1(){
+        return "TEST ok!";
+    }
+
 }
