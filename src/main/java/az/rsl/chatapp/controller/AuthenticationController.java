@@ -33,7 +33,7 @@ public class AuthenticationController {
 
     @PostMapping("/signin")
     public ResponseEntity<JwtAuthenticationResponse> signIn(@RequestBody SignInPayload payload){
-        return ResponseEntity.ok(authenticationService.signIp(payload));
+        return ResponseEntity.ok(authenticationService.signIn(payload));
     }
 
     @PostMapping("/logout")

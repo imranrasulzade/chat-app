@@ -11,6 +11,6 @@ import java.io.IOException;
 
 public interface AuthenticationService {
     JwtAuthenticationResponse signUp(SignUpPayload payload);
-    JwtAuthenticationResponse signIp(SignInPayload payload);
+    JwtAuthenticationResponse signIn(SignInPayload payload);
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
 }
