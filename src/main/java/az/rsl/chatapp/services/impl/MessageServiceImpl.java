@@ -30,6 +30,7 @@ public class MessageServiceImpl implements MessageService {
     public MessageDto send(MessagePayload payload) {
         log.info("message send method started by: {}", payload.getSender().getId());
         Message message = modelMapper.map(payload, Message.class);
+        message.setStatus(true);
         Message savedMessage = messageRepository.save(message);
         MessageDto messageDto = modelMapper.map(savedMessage, MessageDto.class);
         log.info("message sent by: {}", messageDto.getSender());
@@ -61,10 +62,6 @@ public class MessageServiceImpl implements MessageService {
         List<MessageDto> messageDtoList = Arrays.asList(modelMapper.map(messageList, MessageDto[].class));
         log.info("message getBySenderAndReceiverChat done: {}, {}", dto.getSenderId(), dto.getReceiverId());
 
-//        List<String> msgs = new ArrayList<>();
-//        messageList.forEach(message ->
-//                msgs.add(message.getContent()));
-//        System.out.println(msgs);
         return messageDtoList;
     }
 }

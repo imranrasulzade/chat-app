@@ -13,5 +13,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findUsersByIdIsNotAndStatusTrueAndRole_IdOrderByUserNameAsc(Long id,Long roleId);
 
+    List<User> findUsersByIdIsNotAndStatusTrueAndRole_IdAndUserNameStartingWithIgnoreCaseOrderByUserNameAsc(
+            Long id, Long roleId, String userName);
+
+
     User findUsersByIdIsNot(Long id);
 }
