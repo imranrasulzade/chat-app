@@ -10,11 +10,20 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+//    @Override
+//    public void configureMessageBroker(MessageBrokerRegistry config) {
+//        config.enableSimpleBroker("/topic");
+//        config.setApplicationDestinationPrefixes("/app");
+//    }
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic");
+        // Xususi user kanallari uchun usere xas yönlendirme aktiv edilir
+        config.enableSimpleBroker("/queue", "/topic");
+        config.setUserDestinationPrefix("/user");
         config.setApplicationDestinationPrefixes("/app");
     }
+
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
